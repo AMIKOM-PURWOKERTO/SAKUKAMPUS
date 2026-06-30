@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
 import MainDashboard from './components/MainDashboard';
 import ExpenseForm from './components/ExpenseForm';
@@ -9,8 +9,11 @@ import ExpenseTrend from './components/ExpenseTrend';
 import ExpenseLimitWarning from './components/ExpenseLimitWarning';
 import AiSmartInput from './components/AiSmartInput'; 
 
-// URL KE PORT BACKEND CLOUDFLARE WORKER LOCAL (8787)
-const API_URL = 'http://localhost:8787/api';
+// URL KE PORT BACKEND CLOUDFLARE WORKER
+// Gunakan worker production jika diakses dari Cloudflare Pages, atau localhost jika jalan di komputer lokal
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://localhost:8787/api'
+  : 'https://backend-cloudflare.septiyanwilly14.workers.dev/api'; // Nama ini default dari Cloudflare, bisa diubah sesuai nama deploy Anda
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(true); 
@@ -95,7 +98,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    muatDataDariDatabase();
+    const init = async () => {
+      await muatDataDariDatabase();
+    };
+    init();
   }, []);
 
   // Listener otomatis agar beranda langsung update ketika tombol aktifkan ditekan di SubTracker
@@ -134,6 +140,7 @@ export default function App() {
         console.error("❌ Server menolak menyimpan:", errorText);
       }
     } catch (error) {
+      console.error("Fetch error:", error);
       alert("❌ Gagal menyimpan transaksi ke database server!");
     }
   };
@@ -166,7 +173,7 @@ export default function App() {
     setTotalPengeluaran(kalkulasiPengeluaran);
   };
 
-  const handleHapusTransaksi = async (id, jumlah, tipe) => {
+  const handleHapusTransaksi = async (id) => {
     if (confirm("Apakah Anda yakin ingin menghapus catatan riwayat transaksi ini?")) {
       try {
         const respon = await fetch(`${API_URL}/transaksi/${id}`, { method: 'DELETE' });
@@ -175,6 +182,7 @@ export default function App() {
           alert("🗑️ Riwayat transaksi berhasil dihapus dari tabel MySQL!");
         }
       } catch (error) {
+        console.error("Delete error:", error);
         setTransactions(transactions.filter(t => t.id_transaksi !== id));
       }
     }

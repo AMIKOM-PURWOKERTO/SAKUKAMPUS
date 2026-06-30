@@ -10,6 +10,11 @@ app.use('/api/*', cors({
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }));
 
+// Route Utama (Root) agar URL Worker tidak blank putih
+app.get('/', (c) => {
+  return c.text('✅ SakuKampus Backend API is running successfully!');
+});
+
 // 1. API untuk mengambil data Profil User (id_user = 1)
 app.get('/api/user', async (c) => {
   try {

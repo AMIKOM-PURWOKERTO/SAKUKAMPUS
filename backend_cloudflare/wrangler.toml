@@ -5,4 +5,4 @@ compatibility_date = "2024-03-20"
 [[d1_databases]]
 binding = "DB"
 database_name = "sakukampus-db"
-database_id = "local-db-id" # Dummy ID for local dev, will be overridden by real ID on deploy
+database_id = "2ad4bd03-9039-42e2-943a-a1b40ca6e7fe" # Real ID from Cloudflare
