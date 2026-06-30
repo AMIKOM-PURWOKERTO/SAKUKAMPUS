@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+dist/
+dist-ssr/
+*.local
+.env
+.env.*
+!.env.example
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Wrangler / Cloudflare
+.wrangler/
+backend_cloudflare/.wrangler/
